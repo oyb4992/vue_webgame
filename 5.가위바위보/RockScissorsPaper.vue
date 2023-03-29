@@ -25,7 +25,7 @@ const scores = {
   보: -1,
 }
 
-//
+//컴퓨터 선택 값
 const computerChoice = (imgCode) => {
   return Object.entries(rspCords).find((v) => v[1] === imgCode)[0];
 };
