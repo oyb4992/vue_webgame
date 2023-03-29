@@ -4,13 +4,15 @@
     <div id="result">
       <lotto-ball v-for="ball in winBalls" :key="ball" :number="ball"></lotto-ball>
     </div>
-    <div>보너스</div>
+    <div v-if="bonus">보너스</div>
     <lotto-ball v-if="bonus" :number="bonus"></lotto-ball>
     <button v-if="redo" @click="onClickRedo">한번 더!</button>
   </div>
 </template>
 <script>
-import LottoBall from './LottoBall.vue';
+import LottoBall from './LottoBall';
+
+const timeouts = [];
 
 function getWinNumbers() {
   console.log('getWinNumbers');
@@ -42,14 +44,18 @@ export default {
   methods: {
     showBalls() {
       for (let i = 0; i < this.winNumbers.length - 1; i++) {
-        setTimeout(() => {
-          this.winBalls.push(this.winNumbers[i]);
-        }, (i + 1) * 1000);
+        timeouts.push(
+          setTimeout(() => {
+            this.winBalls.push(this.winNumbers[i]);
+          }, (i + 1) * 1000),
+        );
       }
-      setTimeout(() => {
-        this.bonus = this.winNumbers[this.winNumbers.length - 1];
-        this.redo = true;
-      }, this.winNumbers.length * 1000);
+      timeouts.push(
+        setTimeout(() => {
+          this.bonus = this.winNumbers[this.winNumbers.length - 1];
+          this.redo = true;
+        }, this.winNumbers.length * 1000)
+      );
     },
     onClickRedo() {
       this.winNumbers = getWinNumbers();
@@ -63,7 +69,11 @@ export default {
     //화면에 나타난 후
     this.showBalls();
   },
-  beforeDestroy() {},
+  beforeDestroy() {
+    timeouts.forEach((t) => {
+      clearTimeout(t);
+    });
+  },
   watch() {},
 };
 </script>
