@@ -15,7 +15,6 @@ import LottoBall from './LottoBall';
 const timeouts = [];
 
 function getWinNumbers() {
-  console.log('getWinNumbers');
   const candidate = Array(45)
     .fill()
     .map((v, i) => i + 1);
@@ -54,7 +53,7 @@ export default {
         setTimeout(() => {
           this.bonus = this.winNumbers[this.winNumbers.length - 1];
           this.redo = true;
-        }, this.winNumbers.length * 1000)
+        }, this.winNumbers.length * 1000),
       );
     },
     onClickRedo() {
@@ -62,7 +61,6 @@ export default {
       this.winBalls = [];
       this.bonus = null;
       this.redo = false;
-      this.showBalls();
     },
   },
   mounted() {
@@ -74,7 +72,19 @@ export default {
       clearTimeout(t);
     });
   },
-  watch() {},
+  watch: {
+    //값을 감시할 data를 함수명으로 사용. value:현재값, oldValue:이전값
+    //객체의 경우 참조값이므로 이전값과 현재값이 같을 수 있으므로 되도록이면 사용x
+    //하지만, watch는 최대한 사용을 자제하고 대체할 수 있는 방법이 있으면 그 방법을 사용.
+    //watch는 거의 최후의 수단으로 사용한다라고 생각하는게 좋음.(리액트도 포함)
+    //(watch로 인하여 데이터가 예상치못하게 변경되는 등 여러가지 사이드이펙트 발생가능성이 높음)
+    bonus(value, oldValue) {
+      console.log(value, oldValue);
+      if (value === null) {
+        this.showBalls();
+      }
+    },
+  },
 };
 </script>
 <style></style>
