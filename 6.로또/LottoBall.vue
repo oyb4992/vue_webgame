@@ -24,7 +24,7 @@ export default {
         return { backgroundColor : 'yellow' };
       }
       if (this.number > 30 && this.number <= 40) {
-        return {backgroundColor : 'blue'};
+        return {backgroundColor : 'blue', color:'white'};
       }
     },
   },
